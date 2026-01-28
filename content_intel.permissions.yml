@@ -1,0 +1,4 @@
+administer content intel:
+  title: 'Administer Content Intelligence'
+  description: 'Configure Content Intelligence plugins and settings.'
+  restrict access: true

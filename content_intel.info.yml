@@ -1,0 +1,9 @@
+name: Content Intelligence
+type: module
+description: 'Provides CLI access to entity data and intelligence from multiple sources via a plugin system.'
+package: Content
+core_version_requirement: ^10.3 || ^11
+configure: content_intel.settings
+
+dependencies:
+  - drupal:field

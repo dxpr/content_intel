@@ -1,0 +1,134 @@
+<p>This module is part of the <a href="https://www.drupal.org/project/dxpr_cms">DXPR CMS</a> ecosystem.</p>
+
+<blockquote>Content Intelligence provides CLI access to entity data and aggregated intelligence from multiple sources. It enables AI tools, automation scripts, and developers to access comprehensive content data through Drush commands.</blockquote>
+
+<h3>Why Content Intelligence?</h3>
+<p>Modern AI tools and automation workflows need structured access to Drupal content data. Content Intelligence bridges this gap by providing:</p>
+<ul>
+  <li><strong>Entity-agnostic design</strong> — works with all content entity types (nodes, taxonomy terms, media, users, etc.)</li>
+  <li><strong>Comprehensive data extraction</strong> — get entity fields, metadata, and intelligence from multiple plugins in a single request</li>
+  <li><strong>CLI-first approach</strong> — optimized for AI tool consumption via Drush commands with JSON output</li>
+  <li><strong>Plugin architecture</strong> — extensible system using PHP 8 Attributes for easy integration</li>
+</ul>
+
+<hr>
+
+<h3>Drush Commands</h3>
+<p>All commands support <code>--format=json</code> for machine-readable output.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Command</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>drush ci:types</code></td>
+      <td>List available entity types</td>
+    </tr>
+    <tr>
+      <td><code>drush ci:bundles [type]</code></td>
+      <td>List bundles for an entity type</td>
+    </tr>
+    <tr>
+      <td><code>drush ci:fields [type] [bundle]</code></td>
+      <td>List fields for an entity type/bundle</td>
+    </tr>
+    <tr>
+      <td><code>drush ci:plugins</code></td>
+      <td>List available intel plugins</td>
+    </tr>
+    <tr>
+      <td><code>drush ci:list [type] [bundle]</code></td>
+      <td>List entities of a given type</td>
+    </tr>
+    <tr>
+      <td><code>drush ci:entity [type] [id]</code></td>
+      <td>Get full intelligence data for an entity</td>
+    </tr>
+    <tr>
+      <td><code>drush ci:batch [type]</code></td>
+      <td>Batch collect intel for multiple entities</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h3>Built-in Plugins</h3>
+<ul>
+  <li><strong>Statistics</strong> — Page view counts from the Statistics module (nodes only)</li>
+  <li><strong>Content Translation</strong> — Translation status, coverage metrics, and missing languages</li>
+</ul>
+
+<h3>Contrib Integrations</h3>
+<ul>
+  <li><strong>Analyze module</strong> — Content analysis data from Analyze plugins (readability, SEO, etc.)</li>
+  <li><strong>AI Social Posts</strong> — Social media posts linked to content</li>
+</ul>
+
+<hr>
+
+<h3>Creating Custom Plugins</h3>
+<p>Extend Content Intelligence with your own data sources using PHP 8 Attributes:</p>
+<pre><code>&lt;?php
+
+#[ContentIntel(
+  id: 'my_plugin',
+  label: new TranslatableMarkup('My Plugin'),
+  description: new TranslatableMarkup('Custom intelligence data.'),
+  entity_types: ['node'],
+  weight: 50,
+)]
+class MyPlugin extends ContentIntelPluginBase {
+
+  public function collect(ContentEntityInterface $entity): array {
+    return [
+      'metric' => 123,
+      'status' => 'active',
+    ];
+  }
+
+}
+</code></pre>
+
+<hr>
+
+<h3>Use Cases</h3>
+<ul>
+  <li><strong>AI Content Analysis</strong> — Feed entity data to AI tools for content audits, recommendations, and improvements</li>
+  <li><strong>Automation Scripts</strong> — Build workflows that process content based on field values and metadata</li>
+  <li><strong>Content Reports</strong> — Generate comprehensive reports combining data from multiple modules</li>
+  <li><strong>Migration Tools</strong> — Export structured content data for migrations or backups</li>
+</ul>
+
+<hr>
+
+<h3>Requirements</h3>
+<ul>
+  <li>Drupal 10.3+ or 11.x</li>
+  <li>PHP 8.1+</li>
+  <li>Drush 12+</li>
+</ul>
+
+<h3>Optional Dependencies</h3>
+<ul>
+  <li><a href="https://www.drupal.org/project/statistics">Statistics</a> — enables view count tracking</li>
+  <li><a href="https://www.drupal.org/project/content_translation">Content Translation</a> — enables translation status</li>
+  <li><a href="https://www.drupal.org/project/analyze">Analyze</a> — enables content analysis plugins</li>
+  <li><a href="https://www.drupal.org/project/ai_social_posts">AI Social Posts</a> — enables social post tracking</li>
+</ul>
+
+<hr>
+
+<h3>Quick Start</h3>
+<ol>
+  <li>Install: <code>composer require drupal/content_intel</code></li>
+  <li>Enable: <code>drush en content_intel</code></li>
+  <li>Configure plugins at <code>/admin/config/content/content-intel</code></li>
+  <li>Test: <code>drush ci:entity node 1 --format=json</code></li>
+</ol>
+
+<p><a class="primary-button" href="https://dxpr.com/?utm_source=drupal.org&utm_medium=referral&utm_campaign=content_intel_project_page" rel="nofollow">Learn more on DXPR.com</a></p>

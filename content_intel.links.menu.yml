@@ -1,0 +1,6 @@
+content_intel.settings:
+  title: 'Content Intelligence'
+  description: 'Configure Content Intelligence plugins.'
+  route_name: content_intel.settings
+  parent: system.admin_config_content
+  weight: 50

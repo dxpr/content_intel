@@ -1,0 +1,10 @@
+content_intel.settings:
+  type: config_object
+  label: 'Content Intelligence settings'
+  mapping:
+    enabled_plugins:
+      type: sequence
+      label: 'Enabled plugins'
+      sequence:
+        type: string
+        label: 'Plugin ID'

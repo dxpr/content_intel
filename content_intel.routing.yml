@@ -1,0 +1,7 @@
+content_intel.settings:
+  path: '/admin/config/content/content-intel'
+  defaults:
+    _form: '\Drupal\content_intel\Form\SettingsForm'
+    _title: 'Content Intelligence Settings'
+  requirements:
+    _permission: 'administer content intel'

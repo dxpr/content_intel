@@ -1,0 +1,33 @@
+<?php
+
+/**
+ * @file
+ * Content Intelligence module.
+ *
+ * Provides CLI access to entity data and intelligence from multiple sources.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Implements hook_help().
+ */
+function content_intel_help(string $route_name): string {
+  if ($route_name === 'help.page.content_intel') {
+    $output = '<h2>Content Intelligence</h2>';
+    $output .= '<p>The Content Intelligence module provides CLI access to entity data ';
+    $output .= 'and aggregated intelligence from multiple sources via a plugin system.</p>';
+    $output .= '<h3>Drush Commands</h3>';
+    $output .= '<ul>';
+    $output .= '<li><code>drush ci:types</code> - List available entity types</li>';
+    $output .= '<li><code>drush ci:bundles [entity_type]</code> - List bundles for an entity type</li>';
+    $output .= '<li><code>drush ci:fields [entity_type] [bundle]</code> - List fields for an entity</li>';
+    $output .= '<li><code>drush ci:plugins</code> - List available intel plugins</li>';
+    $output .= '<li><code>drush ci:list [entity_type] [bundle]</code> - List entities</li>';
+    $output .= '<li><code>drush ci:entity [entity_type] [id]</code> - Get full intel for an entity</li>';
+    $output .= '<li><code>drush ci:batch [entity_type]</code> - Batch collect intel for entities</li>';
+    $output .= '</ul>';
+    return $output;
+  }
+  return '';
+}

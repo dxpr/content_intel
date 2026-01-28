@@ -1,0 +1,13 @@
+services:
+  plugin.manager.content_intel:
+    class: Drupal\content_intel\ContentIntelPluginManager
+    parent: default_plugin_manager
+
+  content_intel.collector:
+    class: Drupal\content_intel\Service\ContentIntelCollector
+    arguments:
+      - '@plugin.manager.content_intel'
+      - '@entity_type.manager'
+      - '@entity_field.manager'
+      - '@config.factory'
+      - '@renderer'
