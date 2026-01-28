@@ -1,0 +1,18 @@
+.specstory
+.idea
+deploy.sh
+node_modules
+
+# SASS Cache
+*.sass-cache*
+
+# OS specific stuff
+.DS_Store
+Thumbs.db
+
+# Auto generated files.
+.build-done
+out
+
+.npm.installed
+.env
