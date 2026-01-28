@@ -26,6 +26,12 @@ parameters:
         - web/modules/contrib/content_intel
     # Set the analysis level (0-9)
     level: 5
+    treatPhpDocTypesAsCertain: false
+    ignoreErrors:
+        # Ignore statistics module not found errors (optional dependency)
+        - '#has unknown class Drupal\\\\statistics\\\\StatisticsStorageInterface#'
+        - '#Call to method fetchView\(\) on an unknown class#'
+        - '#If condition is always false#'
 EOF
 
 mkdir -p web/modules/contrib/
@@ -33,6 +39,9 @@ mkdir -p web/modules/contrib/
 if [ ! -L "web/modules/contrib/content_intel" ]; then
   ln -s /src web/modules/contrib/content_intel
 fi
+
+# Install the statistics module (removed from core in D11).
+composer require drupal/statistics --no-interaction
 
 # Install PHPStan extensions for Drupal 11 and Drush for command analysis
 composer require --dev phpstan/phpstan mglaman/phpstan-drupal phpstan/phpstan-deprecation-rules drush/drush --with-all-dependencies --no-interaction

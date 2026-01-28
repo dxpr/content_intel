@@ -207,7 +207,9 @@ class ContentIntelCollector implements ContentIntelCollectorInterface {
 
     $results = [];
     foreach ($entities as $entity) {
-      $results[] = $this->getEntitySummary($entity);
+      if ($entity instanceof ContentEntityInterface) {
+        $results[] = $this->getEntitySummary($entity);
+      }
     }
 
     return $results;
