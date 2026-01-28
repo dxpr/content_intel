@@ -304,27 +304,26 @@ final class ContentIntelCommands extends DrushCommands {
     $results = [];
 
     if ($options['ids']) {
+      // Use bulk loading for better performance.
       $ids = array_map('trim', explode(',', $options['ids']));
-      foreach ($ids as $id) {
-        $entity = $this->collector->loadEntity($entity_type, $id);
-        if ($entity) {
-          $results[] = $this->collector->collectIntel($entity, [], $plugins);
-        }
+      $entities = $this->collector->loadEntities($entity_type, $ids);
+      foreach ($entities as $entity) {
+        $results[] = $this->collector->collectIntel($entity, [], $plugins);
       }
     }
     else {
       $bundle = $options['bundle'] ?: NULL;
-      $entities = $this->collector->listEntities(
+      $entity_summaries = $this->collector->listEntities(
         $entity_type,
         $bundle,
         (int) $options['limit']
       );
 
-      foreach ($entities as $entity_summary) {
-        $entity = $this->collector->loadEntity($entity_type, $entity_summary['id']);
-        if ($entity) {
-          $results[] = $this->collector->collectIntel($entity, [], $plugins);
-        }
+      // Extract IDs and use bulk loading for better performance.
+      $ids = array_column($entity_summaries, 'id');
+      $entities = $this->collector->loadEntities($entity_type, $ids);
+      foreach ($entities as $entity) {
+        $results[] = $this->collector->collectIntel($entity, [], $plugins);
       }
     }
 

@@ -10,6 +10,7 @@ use Drupal\content_translation\ContentTranslationManagerInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -38,6 +39,13 @@ class ContentTranslationPlugin extends ContentIntelPluginBase {
   protected ?LanguageManagerInterface $languageManager = NULL;
 
   /**
+   * The logger.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected LoggerInterface $logger;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(
@@ -53,6 +61,7 @@ class ContentTranslationPlugin extends ContentIntelPluginBase {
     }
 
     $instance->languageManager = $container->get('language_manager');
+    $instance->logger = $container->get('logger.factory')->get('content_intel');
 
     return $instance;
   }
@@ -143,7 +152,12 @@ class ContentTranslationPlugin extends ContentIntelPluginBase {
           }
         }
         catch (\Exception $e) {
-          // Metadata not available.
+          // Log the error but continue gracefully.
+          $this->logger->warning(
+            'Failed to get translation metadata for @langcode: @message',
+            ['@langcode' => $langcode, '@message' => $e->getMessage()]
+          );
+          $detail['metadata_error'] = $e->getMessage();
         }
       }
 

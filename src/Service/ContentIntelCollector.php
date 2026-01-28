@@ -17,7 +17,7 @@ use Drupal\Core\Render\RendererInterface;
 /**
  * Service for collecting content intelligence from various sources.
  */
-class ContentIntelCollector {
+class ContentIntelCollector implements ContentIntelCollectorInterface {
 
   /**
    * Constructs a ContentIntelCollector.
@@ -139,6 +139,23 @@ class ContentIntelCollector {
   public function loadEntity(string $entity_type_id, int|string $entity_id): ?ContentEntityInterface {
     $entity = $this->entityTypeManager->getStorage($entity_type_id)->load($entity_id);
     return $entity instanceof ContentEntityInterface ? $entity : NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function loadEntities(string $entity_type_id, array $entity_ids): array {
+    if (empty($entity_ids)) {
+      return [];
+    }
+    $entities = $this->entityTypeManager
+      ->getStorage($entity_type_id)
+      ->loadMultiple($entity_ids);
+
+    return array_filter(
+      $entities,
+      fn($entity) => $entity instanceof ContentEntityInterface
+    );
   }
 
   /**
