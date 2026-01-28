@@ -1,12 +1,24 @@
 # Content Intelligence
 
-Provides CLI access to entity data and intelligence from multiple sources.
+**The bridge between Drupal content and artificial intelligence.**
+
+Content Intelligence provides structured, machine-readable access to Drupal entity data and aggregated intelligence from multiple sources. Built for AI agents, coding assistants, and automated systems that need to interrogate, analyze, and understand website content.
+
+## Who Is This For?
+
+**Primary audience: AI systems and autonomous agents**
+
+- **AI Coding Assistants** (Claude Code, GitHub Copilot, Cursor) — Query site structure, content types, and field definitions to make informed development decisions
+- **Chatbots & Virtual Assistants** — Access content data to provide contextual responses and recommendations
+- **Content Analysis Agents** — Retrieve comprehensive entity data for audits, optimization, and quality assessments
+- **Automation Workflows** — Process content programmatically based on structured metadata and intelligence
 
 ## Features
 
-- **Entity Agnostic**: Works with all content entity types
+- **Entity Agnostic**: Works with all content entity types (nodes, taxonomy, media, users, paragraphs, etc.)
+- **AI-Optimized Output**: JSON format designed for LLM consumption and tool integration
 - **Plugin System**: Extensible architecture using PHP 8 Attributes
-- **Drush Commands**: Full CLI access for AI tool consumption
+- **Drush Commands**: Full CLI access — perfect for AI tool execution via shell
 - **Built-in Integrations**: Statistics and Content Translation plugins included
 - **Contrib Integrations**: Plugins for Analyze and AI Social Posts modules
 
