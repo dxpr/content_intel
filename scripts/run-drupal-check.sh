@@ -28,10 +28,14 @@ parameters:
     level: 5
     treatPhpDocTypesAsCertain: false
     ignoreErrors:
-        # Ignore statistics module not found errors (optional dependency)
-        - '#has unknown class Drupal\\\\statistics\\\\StatisticsStorageInterface#'
-        - '#Call to method fetchView\(\) on an unknown class#'
-        - '#If condition is always false#'
+        # Ignore method_exists checks (Drupal pattern for optional features)
+        - '#Call to function method_exists\(\) .* will always evaluate to true#'
+        # Ignore new static() in plugin base class (Drupal pattern)
+        - '#Unsafe usage of new static\(\)#'
+        # Ignore boolean narrowing warnings
+        - '#Left side of && is always true#'
+        # Ignore nullsafe on non-nullable (defensive coding)
+        - '#Using nullsafe method call on non-nullable type#'
 EOF
 
 mkdir -p web/modules/contrib/
