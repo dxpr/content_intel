@@ -1,35 +1,33 @@
 <p>This module is part of the <a href="https://www.drupal.org/project/dxpr_cms">DXPR CMS</a> ecosystem.</p>
 
-<blockquote><strong>The neural interface between Drupal and artificial intelligence.</strong> Content Intelligence unlocks your content for AI agents, coding assistants, and autonomous systems — enabling machines to understand, analyze, and act on your website's data.</blockquote>
+<blockquote>Content Intelligence provides structured CLI access to Drupal entity data and aggregated intelligence from multiple sources. Designed for AI tools, coding assistants, and automation systems.</blockquote>
 
 <hr>
 
-<h3>🤖 Built for the Age of AI</h3>
-<p>As AI transforms how we build and manage websites, intelligent systems need direct access to content data. Content Intelligence serves as the <strong>universal API layer</strong> between your Drupal content and the AI revolution:</p>
+<h3>Built for AI Integration</h3>
+<p>AI tools and automation systems need structured access to content data. Content Intelligence provides a CLI interface for:</p>
 
 <ul>
-  <li><strong>AI Coding Assistants</strong> — Tools like Claude Code, GitHub Copilot, and Cursor can query your site structure, discover content types, and understand field schemas to make intelligent development decisions</li>
-  <li><strong>Conversational AI & Chatbots</strong> — Virtual assistants can access real-time content data to provide contextual, accurate responses about your website</li>
-  <li><strong>Autonomous Content Agents</strong> — AI systems can audit, analyze, and optimize content at scale by accessing structured intelligence</li>
-  <li><strong>Workflow Automation</strong> — Machine learning pipelines and automation tools can process content programmatically</li>
+  <li><strong>AI Coding Assistants</strong> — Tools like Claude Code, GitHub Copilot, and Cursor can query site structure, content types, and field schemas</li>
+  <li><strong>Chatbots</strong> — Access content data to provide contextual responses about your website</li>
+  <li><strong>Content Auditing</strong> — Retrieve entity data with analytics from multiple plugins</li>
+  <li><strong>Automation</strong> — Process content programmatically via Drush commands</li>
 </ul>
 
 <hr>
 
-<h3>⚡ Machine-First Architecture</h3>
-<p>Designed from the ground up for AI consumption:</p>
+<h3>Architecture</h3>
 <ul>
-  <li><strong>Entity-agnostic design</strong> — works with all content entity types (nodes, taxonomy terms, media, users, paragraphs, and beyond)</li>
-  <li><strong>Structured JSON output</strong> — optimized for LLM parsing and tool integration</li>
-  <li><strong>CLI-native approach</strong> — AI tools can execute Drush commands directly via shell</li>
-  <li><strong>Comprehensive data extraction</strong> — entity fields, metadata, and multi-source intelligence in a single request</li>
-  <li><strong>Plugin architecture</strong> — extensible system using PHP 8 Attributes for seamless integration</li>
+  <li><strong>Entity-agnostic</strong> — Works with all content entity types (nodes, taxonomy terms, media, users, paragraphs, etc.)</li>
+  <li><strong>JSON output</strong> — Machine-readable format for tool integration</li>
+  <li><strong>CLI-native</strong> — Drush commands for scripting and AI tool execution</li>
+  <li><strong>Plugin system</strong> — Extensible via PHP 8 Attributes</li>
 </ul>
 
 <hr>
 
-<h3>🔌 Drush Commands</h3>
-<p>All commands support <code>--format=json</code> for machine-readable output — ready for AI tool consumption.</p>
+<h3>Drush Commands</h3>
+<p>All commands support <code>--format=json</code> for machine-readable output.</p>
 
 <table>
   <thead>
@@ -41,7 +39,7 @@
   <tbody>
     <tr>
       <td><code>drush ci:types</code></td>
-      <td>Discover available entity types</td>
+      <td>List available entity types</td>
     </tr>
     <tr>
       <td><code>drush ci:bundles [type]</code></td>
@@ -49,7 +47,7 @@
     </tr>
     <tr>
       <td><code>drush ci:fields [type] [bundle]</code></td>
-      <td>Introspect fields for an entity type/bundle</td>
+      <td>List fields for an entity type/bundle</td>
     </tr>
     <tr>
       <td><code>drush ci:plugins</code></td>
@@ -72,34 +70,23 @@
 
 <hr>
 
-<h3>🧠 Intelligence Plugins</h3>
+<h3>Intelligence Plugins</h3>
 <p><strong>Built-in:</strong></p>
 <ul>
-  <li><strong>Statistics</strong> — Page view counts and engagement metrics</li>
-  <li><strong>Content Translation</strong> — Translation status, coverage metrics, and missing languages</li>
+  <li><strong>Statistics</strong> — Page view counts from the Statistics module</li>
+  <li><strong>Content Translation</strong> — Translation status and coverage metrics</li>
 </ul>
 
-<p><strong>Ecosystem Integrations:</strong></p>
+<p><strong>Contrib Integrations:</strong></p>
 <ul>
-  <li><strong>Analyze module</strong> — Content analysis data from Analyze plugins (readability, SEO, sentiment analysis, etc.)</li>
-  <li><strong>AI Social Posts</strong> — Social media posts and engagement data linked to content</li>
+  <li><strong>Analyze</strong> — Content analysis data (readability, SEO, etc.)</li>
+  <li><strong>AI Social Posts</strong> — Social media posts linked to content</li>
 </ul>
 
 <hr>
 
-<h3>🚀 Use Cases</h3>
-<ul>
-  <li><strong>AI-Powered Development</strong> — Coding assistants query your site structure to generate accurate, context-aware code</li>
-  <li><strong>Intelligent Content Audits</strong> — AI agents analyze content quality, SEO, and translation coverage at scale</li>
-  <li><strong>Conversational Interfaces</strong> — Chatbots access real content data to answer questions about your site</li>
-  <li><strong>Predictive Analytics</strong> — Machine learning models consume historical content metrics</li>
-  <li><strong>Automated Quality Assurance</strong> — AI-driven testing and validation workflows</li>
-</ul>
-
-<hr>
-
-<h3>🛠 Extend with Custom Plugins</h3>
-<p>Add your own intelligence sources using PHP 8 Attributes:</p>
+<h3>Custom Plugins</h3>
+<p>Add custom intelligence sources using PHP 8 Attributes:</p>
 <pre><code>&lt;?php
 
 #[ContentIntel(
@@ -113,9 +100,8 @@ class MyPlugin extends ContentIntelPluginBase {
 
   public function collect(ContentEntityInterface $entity): array {
     return [
-      'ai_score' => 0.95,
-      'sentiment' => 'positive',
-      'insights' => ['engaging', 'well-structured'],
+      'score' => 0.95,
+      'status' => 'published',
     ];
   }
 
@@ -124,7 +110,7 @@ class MyPlugin extends ContentIntelPluginBase {
 
 <hr>
 
-<h3>📋 Requirements</h3>
+<h3>Requirements</h3>
 <ul>
   <li>Drupal 10.3+ or 11.x</li>
   <li>PHP 8.1+</li>
@@ -133,22 +119,20 @@ class MyPlugin extends ContentIntelPluginBase {
 
 <h3>Optional Dependencies</h3>
 <ul>
-  <li><a href="https://www.drupal.org/project/statistics">Statistics</a> — enables view count tracking</li>
-  <li><a href="https://www.drupal.org/project/content_translation">Content Translation</a> — enables translation status</li>
-  <li><a href="https://www.drupal.org/project/analyze">Analyze</a> — enables content analysis plugins</li>
-  <li><a href="https://www.drupal.org/project/ai_social_posts">AI Social Posts</a> — enables social post tracking</li>
+  <li><a href="https://www.drupal.org/project/statistics">Statistics</a> — view count tracking</li>
+  <li><a href="https://www.drupal.org/project/content_translation">Content Translation</a> — translation status</li>
+  <li><a href="https://www.drupal.org/project/analyze">Analyze</a> — content analysis plugins</li>
+  <li><a href="https://www.drupal.org/project/ai_social_posts">AI Social Posts</a> — social post tracking</li>
 </ul>
 
 <hr>
 
-<h3>⚡ Quick Start</h3>
+<h3>Quick Start</h3>
 <ol>
   <li>Install: <code>composer require drupal/content_intel</code></li>
   <li>Enable: <code>drush en content_intel</code></li>
   <li>Configure plugins at <code>/admin/config/content/content-intel</code></li>
-  <li>Query: <code>drush ci:entity node 1 --format=json</code></li>
+  <li>Test: <code>drush ci:entity node 1 --format=json</code></li>
 </ol>
-
-<p><em>Ready to connect your Drupal site to the future of AI?</em></p>
 
 <p><a class="primary-button" href="https://dxpr.com/?utm_source=drupal.org&utm_medium=referral&utm_campaign=content_intel_project_page" rel="nofollow">Learn more on DXPR.com</a></p>

@@ -1,24 +1,20 @@
 # Content Intelligence
 
-**The bridge between Drupal content and artificial intelligence.**
+Structured CLI access to Drupal entity data and aggregated intelligence from multiple sources. Designed for AI tools, coding assistants, and automation systems that need to query and analyze website content.
 
-Content Intelligence provides structured, machine-readable access to Drupal entity data and aggregated intelligence from multiple sources. Built for AI agents, coding assistants, and automated systems that need to interrogate, analyze, and understand website content.
+## Primary Use Cases
 
-## Who Is This For?
-
-**Primary audience: AI systems and autonomous agents**
-
-- **AI Coding Assistants** (Claude Code, GitHub Copilot, Cursor) — Query site structure, content types, and field definitions to make informed development decisions
-- **Chatbots & Virtual Assistants** — Access content data to provide contextual responses and recommendations
-- **Content Analysis Agents** — Retrieve comprehensive entity data for audits, optimization, and quality assessments
-- **Automation Workflows** — Process content programmatically based on structured metadata and intelligence
+- **AI Coding Assistants** (Claude Code, Copilot, Cursor) — Query site structure, content types, and field schemas
+- **Chatbots** — Access content data for contextual responses
+- **Content Auditing** — Retrieve entity data with analytics from multiple plugins
+- **Automation** — Process content programmatically via CLI
 
 ## Features
 
 - **Entity Agnostic**: Works with all content entity types (nodes, taxonomy, media, users, paragraphs, etc.)
-- **AI-Optimized Output**: JSON format designed for LLM consumption and tool integration
+- **JSON Output**: Machine-readable format for tool integration
 - **Plugin System**: Extensible architecture using PHP 8 Attributes
-- **Drush Commands**: Full CLI access — perfect for AI tool execution via shell
+- **Drush Commands**: Full CLI access for scripting and AI tool execution
 - **Built-in Integrations**: Statistics and Content Translation plugins included
 - **Contrib Integrations**: Plugins for Analyze and AI Social Posts modules
 
