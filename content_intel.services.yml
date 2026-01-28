@@ -11,3 +11,5 @@ services:
       - '@entity_field.manager'
       - '@config.factory'
       - '@renderer'
+      - '@entity_type.bundle.info'
+      - '@file_url_generator'

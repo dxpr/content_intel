@@ -8,8 +8,10 @@ use Drupal\content_intel\ContentIntelPluginManager;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Render\RendererInterface;
 
 /**
@@ -30,6 +32,10 @@ class ContentIntelCollector {
    *   The config factory.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $bundleInfo
+   *   The entity type bundle info service.
+   * @param \Drupal\Core\File\FileUrlGeneratorInterface $fileUrlGenerator
+   *   The file URL generator.
    */
   public function __construct(
     protected ContentIntelPluginManager $pluginManager,
@@ -37,6 +43,8 @@ class ContentIntelCollector {
     protected EntityFieldManagerInterface $entityFieldManager,
     protected ConfigFactoryInterface $configFactory,
     protected RendererInterface $renderer,
+    protected EntityTypeBundleInfoInterface $bundleInfo,
+    protected FileUrlGeneratorInterface $fileUrlGenerator,
   ) {}
 
   /**
@@ -71,7 +79,7 @@ class ContentIntelCollector {
    */
   public function getBundles(string $entity_type_id): array {
     $bundles = [];
-    $bundle_info = \Drupal::service('entity_type.bundle.info')->getBundleInfo($entity_type_id);
+    $bundle_info = $this->bundleInfo->getBundleInfo($entity_type_id);
 
     foreach ($bundle_info as $bundle_id => $info) {
       $bundles[$bundle_id] = [
@@ -254,8 +262,10 @@ class ContentIntelCollector {
         continue;
       }
 
-      // Skip if plugin is disabled in config (unless specific plugins requested).
-      if (empty($plugins) && !empty($enabled_plugins) && !in_array($plugin_id, $enabled_plugins, TRUE)) {
+      // Skip if plugin is disabled in config (unless requested).
+      $is_disabled = !empty($enabled_plugins)
+        && !in_array($plugin_id, $enabled_plugins, TRUE);
+      if (empty($plugins) && $is_disabled) {
         continue;
       }
 
@@ -379,7 +389,7 @@ class ContentIntelCollector {
       if ($file) {
         $value['filename'] = $file->getFilename();
         $value['uri'] = $file->getFileUri();
-        $value['url'] = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+        $value['url'] = $this->fileUrlGenerator->generateAbsoluteString($file->getFileUri());
         $value['mime'] = $file->getMimeType();
         $value['size'] = $file->getSize();
       }

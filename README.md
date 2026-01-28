@@ -1,10 +1,10 @@
 # Content Intelligence
 
-Provides CLI access to entity data and intelligence from multiple sources via a plugin system.
+Provides CLI access to entity data and intelligence from multiple sources.
 
 ## Features
 
-- **Entity Agnostic**: Works with all content entity types (nodes, taxonomy terms, media, users, etc.)
+- **Entity Agnostic**: Works with all content entity types
 - **Plugin System**: Extensible architecture using PHP 8 Attributes
 - **Drush Commands**: Full CLI access for AI tool consumption
 - **Built-in Integrations**: Statistics and Content Translation plugins included
@@ -69,7 +69,7 @@ drush ci:batch node --ids=1,2,3 --plugins=statistics
 
 ### Creating a Plugin
 
-Create a class in `src/Plugin/ContentIntel/` with the `#[ContentIntel]` attribute:
+Create a class in `src/Plugin/ContentIntel/` with the attribute:
 
 ```php
 <?php
@@ -81,27 +81,36 @@ use Drupal\content_intel\ContentIntelPluginBase;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
+/**
+ * Example ContentIntel plugin.
+ */
 #[ContentIntel(
   id: 'my_plugin',
   label: new TranslatableMarkup('My Plugin'),
-  description: new TranslatableMarkup('Description of what this plugin provides.'),
-  entity_types: ['node'],  // Empty array = all entity types
+  description: new TranslatableMarkup('Description here.'),
+  entity_types: ['node'],
   weight: 50,
 )]
 class MyPlugin extends ContentIntelPluginBase {
 
+  /**
+   * {@inheritdoc}
+   */
   public function isAvailable(): bool {
-    // Check if dependencies are met
     return TRUE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function applies(ContentEntityInterface $entity): bool {
-    // Check if this plugin should run for this entity
     return TRUE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function collect(ContentEntityInterface $entity): array {
-    // Return intelligence data
     return [
       'metric' => 123,
       'status' => 'active',
@@ -128,23 +137,23 @@ Other modules can use the collector service directly:
 ```php
 $collector = \Drupal::service('content_intel.collector');
 
-// Get entity types
+// Get entity types.
 $types = $collector->getEntityTypes();
 
-// Get bundles
+// Get bundles.
 $bundles = $collector->getBundles('node');
 
-// Get fields
+// Get fields.
 $fields = $collector->getFields('node', 'article');
 
-// List entities
+// List entities.
 $entities = $collector->listEntities('node', 'article', limit: 10);
 
-// Load and analyze entity
+// Load and analyze entity.
 $entity = $collector->loadEntity('node', 1);
 $intel = $collector->collectIntel($entity);
 
-// Get available plugins
+// Get available plugins.
 $plugins = $collector->getPlugins();
 ```
 
