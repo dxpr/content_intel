@@ -152,10 +152,14 @@ class ContentIntelCollector implements ContentIntelCollectorInterface {
       ->getStorage($entity_type_id)
       ->loadMultiple($entity_ids);
 
-    return array_filter(
-      $entities,
-      fn($entity) => $entity instanceof ContentEntityInterface
-    );
+    // Preserve input order and filter to ContentEntityInterface.
+    $result = [];
+    foreach ($entity_ids as $id) {
+      if (isset($entities[$id]) && $entities[$id] instanceof ContentEntityInterface) {
+        $result[$id] = $entities[$id];
+      }
+    }
+    return $result;
   }
 
   /**

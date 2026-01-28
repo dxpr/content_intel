@@ -121,7 +121,14 @@ interface ContentIntelCollectorInterface {
    * Gets available plugins.
    *
    * @return array
-   *   Array of plugin info.
+   *   Array of plugin info keyed by plugin ID. Each entry contains:
+   *   - id: (string) Plugin ID.
+   *   - label: (string) Human-readable label.
+   *   - description: (string) Plugin description.
+   *   - provider: (string) Module providing the plugin.
+   *   - available: (bool) Whether the plugin's dependencies are met.
+   *   - entity_types: (array) Entity types this plugin supports.
+   *   - weight: (int) Plugin weight for ordering.
    */
   public function getPlugins(): array;
 
