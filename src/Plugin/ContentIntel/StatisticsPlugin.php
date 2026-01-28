@@ -6,6 +6,7 @@ namespace Drupal\content_intel\Plugin\ContentIntel;
 
 use Drupal\content_intel\Attribute\ContentIntel;
 use Drupal\content_intel\ContentIntelPluginBase;
+use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\node\NodeInterface;
@@ -32,6 +33,13 @@ class StatisticsPlugin extends ContentIntelPluginBase {
   protected ?StatisticsStorageInterface $statisticsStorage = NULL;
 
   /**
+   * The date formatter.
+   *
+   * @var \Drupal\Core\Datetime\DateFormatterInterface
+   */
+  protected DateFormatterInterface $dateFormatter;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(
@@ -45,6 +53,7 @@ class StatisticsPlugin extends ContentIntelPluginBase {
     if ($container->has('statistics.storage.node')) {
       $instance->statisticsStorage = $container->get('statistics.storage.node');
     }
+    $instance->dateFormatter = $container->get('date.formatter');
 
     return $instance;
   }
@@ -90,7 +99,7 @@ class StatisticsPlugin extends ContentIntelPluginBase {
       'last_view' => $timestamp ? [
         'timestamp' => $timestamp,
         'iso8601' => date('c', $timestamp),
-        'human' => \Drupal::service('date.formatter')->format($timestamp, 'medium'),
+        'human' => $this->dateFormatter->format($timestamp, 'medium'),
       ] : NULL,
     ];
   }
