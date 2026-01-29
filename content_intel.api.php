@@ -5,8 +5,6 @@
  * Hooks provided by the Content Intelligence module.
  */
 
-use Drupal\Core\Entity\ContentEntityInterface;
-
 /**
  * @defgroup content_intel_plugins Content Intelligence Plugins
  * @{
