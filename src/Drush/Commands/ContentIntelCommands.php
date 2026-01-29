@@ -6,6 +6,7 @@ namespace Drupal\content_intel\Drush\Commands;
 
 use Consolidation\OutputFormatters\StructuredData\RowsOfFields;
 use Drupal\content_intel\Service\ContentIntelCollector;
+use Drupal\content_intel\Service\SearchQueryCollectorInterface;
 use Drush\Attributes as CLI;
 use Drush\Commands\DrushCommands;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -22,9 +23,12 @@ final class ContentIntelCommands extends DrushCommands {
    *
    * @param \Drupal\content_intel\Service\ContentIntelCollector $collector
    *   The content intel collector service.
+   * @param \Drupal\content_intel\Service\SearchQueryCollectorInterface $searchQueryCollector
+   *   The search query collector service.
    */
   public function __construct(
     protected ContentIntelCollector $collector,
+    protected SearchQueryCollectorInterface $searchQueryCollector,
   ) {
     parent::__construct();
   }
@@ -34,7 +38,8 @@ final class ContentIntelCommands extends DrushCommands {
    */
   public static function create(ContainerInterface $container): self {
     return new static(
-      $container->get('content_intel.collector')
+      $container->get('content_intel.collector'),
+      $container->get('content_intel.search_query_collector')
     );
   }
 
@@ -328,6 +333,87 @@ final class ContentIntelCommands extends DrushCommands {
     }
 
     return $results;
+  }
+
+  /**
+   * List top search queries.
+   *
+   * @param array $options
+   *   Command options.
+   *
+   * @return \Consolidation\OutputFormatters\StructuredData\RowsOfFields|array
+   *   Search query data.
+   */
+  #[CLI\Command(name: 'ci:searches', aliases: ['cisrc'])]
+  #[CLI\Option(name: 'limit', description: 'Maximum queries to return (default: 50)')]
+  #[CLI\Option(name: 'gaps', description: 'Show only content gaps (zero/low result searches)')]
+  #[CLI\Option(name: 'max-results', description: 'Max results threshold for gaps (default: 0)')]
+  #[CLI\Option(name: 'format', description: 'Output format: table, json, yaml (default: table)')]
+  #[CLI\FieldLabels(labels: [
+    'query' => 'Query',
+    'count' => 'Count',
+    'results_count' => 'Results',
+    'last_searched' => 'Last Searched',
+  ])]
+  #[CLI\DefaultFields(fields: ['query', 'count', 'results_count'])]
+  #[CLI\Usage(name: 'drush ci:searches', description: 'List top search queries')]
+  #[CLI\Usage(name: 'drush ci:searches --gaps', description: 'Show searches with no results (content gaps)')]
+  #[CLI\Usage(name: 'drush ci:searches --limit=20 --format=json', description: 'Get top 20 queries as JSON')]
+  public function searches(
+    array $options = [
+      'limit' => 50,
+      'gaps' => FALSE,
+      'max-results' => 0,
+      'format' => 'table',
+    ],
+  ): RowsOfFields|array {
+    if (!$this->searchQueryCollector->isAvailable()) {
+      $this->logger()->warning('No search query data source available. Run database updates to create the logging table, or install Search API with logging.');
+      return new RowsOfFields([]);
+    }
+
+    $limit = (int) $options['limit'];
+
+    if ($options['gaps']) {
+      $queries = $this->searchQueryCollector->getContentGaps($limit, (int) $options['max-results']);
+    }
+    else {
+      $queries = $this->searchQueryCollector->getTopQueries($limit);
+    }
+
+    // Flatten last_searched for table display.
+    $rows = array_map(function ($query) {
+      return [
+        'query' => $query['query'],
+        'count' => $query['count'],
+        'results_count' => $query['results_count'] ?? 'N/A',
+        'last_searched' => $query['last_searched']['human'] ?? 'N/A',
+      ];
+    }, $queries);
+
+    if ($options['format'] === 'json' || $options['format'] === 'yaml') {
+      return $queries;
+    }
+
+    return new RowsOfFields($rows);
+  }
+
+  /**
+   * Show search query data source status.
+   *
+   * @return array
+   *   Status information.
+   */
+  #[CLI\Command(name: 'ci:search-status', aliases: ['ciss'])]
+  #[CLI\Usage(name: 'drush ci:search-status', description: 'Check search query logging status')]
+  public function searchStatus(): array {
+    return [
+      'available' => $this->searchQueryCollector->isAvailable(),
+      'source' => $this->searchQueryCollector->getSource(),
+      'message' => $this->searchQueryCollector->isAvailable()
+        ? 'Search query logging is active.'
+        : 'No search query data source found. Run "drush updb" to create the logging table.',
+    ];
   }
 
 }

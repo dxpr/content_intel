@@ -1,0 +1,75 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and uninstall functions for the Content Intel module.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Implements hook_schema().
+ */
+function content_intel_schema(): array {
+  $schema['content_intel_search_log'] = [
+    'description' => 'Stores search query logs for content intelligence.',
+    'fields' => [
+      'id' => [
+        'description' => 'Primary key.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'keywords' => [
+        'description' => 'The search keywords.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ],
+      'results_count' => [
+        'description' => 'Number of results returned.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'index_id' => [
+        'description' => 'Optional search index identifier.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => FALSE,
+      ],
+      'timestamp' => [
+        'description' => 'Unix timestamp of the search.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+    ],
+    'primary key' => ['id'],
+    'indexes' => [
+      'keywords' => ['keywords'],
+      'results_count' => ['results_count'],
+      'timestamp' => ['timestamp'],
+      'keywords_results' => ['keywords', 'results_count'],
+    ],
+  ];
+
+  return $schema;
+}
+
+/**
+ * Install the search log table.
+ */
+function content_intel_update_10001(): void {
+  $schema = content_intel_schema();
+  $database = \Drupal::database();
+
+  if (!$database->schema()->tableExists('content_intel_search_log')) {
+    $database->schema()->createTable(
+      'content_intel_search_log',
+      $schema['content_intel_search_log']
+    );
+  }
+}
