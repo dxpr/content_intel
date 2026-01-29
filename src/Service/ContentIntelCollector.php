@@ -10,6 +10,7 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Render\RendererInterface;
@@ -36,6 +37,8 @@ class ContentIntelCollector implements ContentIntelCollectorInterface {
    *   The entity type bundle info service.
    * @param \Drupal\Core\File\FileUrlGeneratorInterface $fileUrlGenerator
    *   The file URL generator.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
+   *   The module handler.
    */
   public function __construct(
     protected ContentIntelPluginManager $pluginManager,
@@ -45,6 +48,7 @@ class ContentIntelCollector implements ContentIntelCollectorInterface {
     protected RendererInterface $renderer,
     protected EntityTypeBundleInfoInterface $bundleInfo,
     protected FileUrlGeneratorInterface $fileUrlGenerator,
+    protected ModuleHandlerInterface $moduleHandler,
   ) {}
 
   /**
@@ -308,6 +312,9 @@ class ContentIntelCollector implements ContentIntelCollectorInterface {
         ];
       }
     }
+
+    // Allow other modules to alter the collected intelligence data.
+    $this->moduleHandler->alter('content_intel_collect', $data, $entity);
 
     return $data;
   }

@@ -1,0 +1,48 @@
+<?php
+
+/**
+ * @file
+ * Example implementations for Content Intelligence module.
+ *
+ * This module demonstrates how to extend Content Intelligence with custom
+ * plugins and hook implementations.
+ */
+
+declare(strict_types=1);
+
+use Drupal\Core\Entity\ContentEntityInterface;
+
+/**
+ * Implements hook_content_intel_collect_alter().
+ *
+ * Demonstrates how to add computed metrics based on collected plugin data.
+ * This example creates a simple content score based on word count.
+ */
+function content_intel_example_content_intel_collect_alter(array &$data, ContentEntityInterface $entity): void {
+  // Only compute score if word count data is available.
+  if (!isset($data['intel']['word_count']['data']['total_words'])) {
+    return;
+  }
+
+  $total_words = $data['intel']['word_count']['data']['total_words'];
+
+  // Calculate a simple content score based on word count.
+  // This is just an example - real scoring would be more sophisticated.
+  $score = match (TRUE) {
+    $total_words >= 1000 => 'comprehensive',
+    $total_words >= 500 => 'detailed',
+    $total_words >= 200 => 'moderate',
+    $total_words >= 50 => 'brief',
+    default => 'minimal',
+  };
+
+  // Add computed data under a custom key.
+  $data['intel']['content_score'] = [
+    'plugin' => 'Content Score (computed)',
+    'data' => [
+      'score' => $score,
+      'word_count_used' => $total_words,
+      'computed_by' => 'content_intel_example',
+    ],
+  ];
+}

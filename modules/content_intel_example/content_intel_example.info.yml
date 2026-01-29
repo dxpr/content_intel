@@ -1,0 +1,7 @@
+name: 'Content Intelligence Example'
+type: module
+description: 'Provides example plugins and hook implementations for the Content Intelligence module.'
+package: Example
+core_version_requirement: ^10.3 || ^11
+dependencies:
+  - content_intel:content_intel
