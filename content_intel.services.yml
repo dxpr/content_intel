@@ -13,3 +13,4 @@ services:
       - '@renderer'
       - '@entity_type.bundle.info'
       - '@file_url_generator'
+      - '@module_handler'

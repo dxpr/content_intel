@@ -21,7 +21,7 @@
  * 3. Add the #[ContentIntel] attribute with required parameters
  * 4. Implement the required methods
  *
- * Example plugin implementation:
+ * Basic plugin example:
  * @code
  * namespace Drupal\my_module\Plugin\ContentIntel;
  *
@@ -39,25 +39,68 @@
  * )]
  * class MyCustomIntelPlugin extends ContentIntelPluginBase {
  *
+ *   public function collect(ContentEntityInterface $entity): array {
+ *     return [
+ *       'custom_metric' => 123,
+ *       'custom_status' => 'active',
+ *     ];
+ *   }
+ *
+ * }
+ * @endcode
+ *
+ * Plugin with dependency injection example:
+ * @code
+ * namespace Drupal\my_module\Plugin\ContentIntel;
+ *
+ * use Drupal\content_intel\Attribute\ContentIntel;
+ * use Drupal\content_intel\ContentIntelPluginBase;
+ * use Drupal\Core\Database\Connection;
+ * use Drupal\Core\Entity\ContentEntityInterface;
+ * use Drupal\Core\StringTranslation\TranslatableMarkup;
+ * use Drupal\node\NodeInterface;
+ * use Symfony\Component\DependencyInjection\ContainerInterface;
+ *
+ * #[ContentIntel(
+ *   id: 'my_database_intel',
+ *   label: new TranslatableMarkup('Database Intel'),
+ *   description: new TranslatableMarkup('Collects data from custom database tables.'),
+ *   entity_types: ['node'],
+ *   weight: 60,
+ * )]
+ * class MyDatabaseIntelPlugin extends ContentIntelPluginBase {
+ *
+ *   protected Connection $database;
+ *
+ *   public static function create(
+ *     ContainerInterface $container,
+ *     array $configuration,
+ *     $plugin_id,
+ *     $plugin_definition,
+ *   ): static {
+ *     $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+ *     $instance->database = $container->get('database');
+ *     return $instance;
+ *   }
+ *
  *   public function isAvailable(): bool {
- *     // Check if required dependencies are available.
- *     return \Drupal::moduleHandler()->moduleExists('my_dependency');
+ *     // Check if required table exists.
+ *     return $this->database->schema()->tableExists('my_custom_table');
  *   }
  *
  *   public function applies(ContentEntityInterface $entity): bool {
  *     // Only apply to published nodes.
- *     if ($entity->getEntityTypeId() === 'node') {
- *       return $entity->isPublished();
- *     }
- *     return TRUE;
+ *     return $entity instanceof NodeInterface && $entity->isPublished();
  *   }
  *
  *   public function collect(ContentEntityInterface $entity): array {
- *     // Return intelligence data as an associative array.
- *     return [
- *       'custom_metric' => $this->calculateMetric($entity),
- *       'custom_status' => 'active',
- *     ];
+ *     $result = $this->database->select('my_custom_table', 't')
+ *       ->fields('t', ['score', 'category'])
+ *       ->condition('entity_id', $entity->id())
+ *       ->execute()
+ *       ->fetchAssoc();
+ *
+ *     return $result ?: [];
  *   }
  *
  * }
@@ -87,6 +130,7 @@
  * @see \Drupal\content_intel\ContentIntelPluginInterface
  * @see \Drupal\content_intel\ContentIntelPluginBase
  * @see \Drupal\content_intel\ContentIntelPluginManager
+ * @see content_intel_example
  * @}
  */
 
@@ -134,6 +178,49 @@ function hook_content_intel_info_alter(array &$definitions) {
 
   // Remove a plugin entirely.
   unset($definitions['unwanted_plugin']);
+}
+
+/**
+ * Alter collected intelligence data for an entity.
+ *
+ * This hook is invoked after all plugins have collected their data, allowing
+ * modules to modify or extend the final intelligence result. Use this hook to:
+ * - Add computed or derived metrics based on combined plugin data
+ * - Modify or remove data from specific plugins
+ * - Add custom data that doesn't warrant a full plugin.
+ *
+ * @param array $data
+ *   The collected intelligence data array with the following structure:
+ *   - entity: Entity summary (entity_type, id, uuid, label, bundle, langcode).
+ *   - fields: Extracted field data keyed by field name.
+ *   - intel: Plugin data keyed by plugin ID, each containing:
+ *     - plugin: The plugin label.
+ *     - data: The collected data array.
+ *     - error: (optional) Error message if collection failed.
+ * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+ *   The entity that was analyzed.
+ *
+ * @see \Drupal\content_intel\Service\ContentIntelCollector::collectIntel()
+ */
+function hook_content_intel_collect_alter(array &$data, \Drupal\Core\Entity\ContentEntityInterface $entity) {
+  // Add a computed score based on statistics data.
+  if (isset($data['intel']['statistics']['data']['total_views'])) {
+    $views = $data['intel']['statistics']['data']['total_views'];
+    $data['intel']['computed']['data']['popularity'] = match (TRUE) {
+      $views > 1000 => 'viral',
+      $views > 100 => 'popular',
+      $views > 10 => 'moderate',
+      default => 'low',
+    };
+  }
+
+  // Add custom metadata.
+  $data['intel']['custom']['data']['analyzed_at'] = date('c');
+
+  // Remove sensitive data from a specific plugin.
+  if (isset($data['intel']['my_plugin']['data']['internal_id'])) {
+    unset($data['intel']['my_plugin']['data']['internal_id']);
+  }
 }
 
 /**
