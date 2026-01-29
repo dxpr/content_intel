@@ -20,3 +20,4 @@ services:
       - '@database'
       - '@module_handler'
       - '@date.formatter'
+      - '@datetime.time'

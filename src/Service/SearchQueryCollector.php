@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\content_intel\Service;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -33,11 +34,14 @@ class SearchQueryCollector implements SearchQueryCollectorInterface {
    *   The module handler.
    * @param \Drupal\Core\Datetime\DateFormatterInterface $dateFormatter
    *   The date formatter.
+   * @param \Drupal\Component\Datetime\TimeInterface $time
+   *   The time service.
    */
   public function __construct(
     protected Connection $database,
     protected ModuleHandlerInterface $moduleHandler,
     protected DateFormatterInterface $dateFormatter,
+    protected TimeInterface $time,
   ) {}
 
   /**
@@ -298,7 +302,7 @@ class SearchQueryCollector implements SearchQueryCollectorInterface {
         'keywords' => mb_substr($keywords, 0, 255),
         'results_count' => $results_count,
         'index_id' => $index_id,
-        'timestamp' => \Drupal::time()->getRequestTime(),
+        'timestamp' => $this->time->getRequestTime(),
       ])
       ->execute();
   }
