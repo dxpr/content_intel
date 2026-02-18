@@ -9,7 +9,7 @@ on:
 jobs:
 
   drupal-lint:
-    runs-on: ubuntu-latest
+    runs-on: ubicloud-standard-4
     timeout-minutes: 60
     steps:
     - uses: actions/checkout@v3
@@ -19,7 +19,7 @@ jobs:
         docker compose run --rm drupal-lint
 
   drupal-check:
-    runs-on: ubuntu-latest
+    runs-on: ubicloud-standard-4
     steps:
     - uses: actions/checkout@v3
 
