@@ -1,4 +1,8 @@
-# Content Intelligence
+> Part of [DXPR CMS](https://dxpr.com/c/marketing-cms) -- The AI-Powered Drupal CMS
+>
+> [Documentation](https://dxpr.com/docs) | [Try Free](https://dxpr.com/try) | [dxpr.com](https://dxpr.com)
+
+# Content Intelligence -- Drupal Entity Data and Analytics CLI for AI Tools
 
 Provides CLI access to entity data and intelligence from multiple sources.
 
@@ -168,3 +172,9 @@ $plugins = $collector->getPlugins();
 - **Content Translation module**: Enables translation status
 - **Analyze module**: Enables content analysis plugins
 - **AI Social Posts module**: Enables social post tracking
+
+## Related DXPR Modules
+
+- [Analyze](https://www.drupal.org/project/analyze) -- Content analysis framework for Drupal
+- [Drush Webmaster](https://www.drupal.org/project/drush_webmaster) -- AI-assisted Drupal site management via Drush CLI
+- [DXPR Builder](https://www.drupal.org/project/dxpr_builder) -- Drag-and-drop Drupal page builder
