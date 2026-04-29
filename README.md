@@ -179,8 +179,8 @@ $plugins = $collector->getPlugins();
 
 ## Related Modules
 
-- [Analyze](https://www.drupal.org/project/analyze) - Content analysis framework for Drupal
-- [Drush Webmaster](https://www.drupal.org/project/drush_webmaster) - AI-assisted Drupal site management via Drush CLI
-- [DXPR Builder](https://www.drupal.org/project/dxpr_builder) - Drag-and-drop Drupal page builder
-- [Search API](https://www.drupal.org/project/search_api) - Framework for creating searches on Drupal entities
-- [ECA](https://www.drupal.org/project/eca) - Event-Condition-Action automation for Drupal
+- [Analyze](https://www.drupal.org/project/analyze) - Content analysis framework for Drupal. Content Intelligence includes a contrib plugin that surfaces Analyze data through its CLI and API
+- [AI Social Posts](https://www.drupal.org/project/ai_social_posts) - AI-generated social media posts. Content Intelligence includes a contrib plugin that exposes social post data linked to content entities
+- [Statistics](https://www.drupal.org/project/statistics) - Core module for page view tracking. Content Intelligence ships a built-in plugin that collects view counts for nodes
+- [Content Translation](https://www.drupal.org/project/content_translation) - Core module for multilingual content. Content Intelligence ships a built-in plugin that reports translation coverage and missing languages
+- [Drush Webmaster](https://www.drupal.org/project/drush_webmaster) - AI-assisted Drupal site management via Drush. Can consume Content Intelligence's JSON output to make data-driven content decisions
