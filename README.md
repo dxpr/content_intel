@@ -2,9 +2,9 @@
 > provides CLI and API access to Drupal entity data, making site content available
 > to AI coding assistants and automation pipelines. By [DXPR](https://dxpr.com).
 >
-> [Getting Started](https://dxpr.com/c/getting-started) |
+> [Getting Started](https://dxpr.com/c/marketing-cms) |
 > [Pricing](https://dxpr.com/pricing) |
-> [Try Free Demo](https://dxpr.com/try)
+> [Try Free Demo](https://try.dxpr.com)
 
 # Content Intelligence - Drupal Entity Data and Analytics CLI for AI Tools
 
@@ -182,5 +182,5 @@ $plugins = $collector->getPlugins();
 - [Analyze](https://www.drupal.org/project/analyze) - Content analysis framework for Drupal. Content Intelligence includes a contrib plugin that surfaces Analyze data through its CLI and API
 - [AI Social Posts](https://www.drupal.org/project/ai_social_posts) - AI-generated social media posts. Content Intelligence includes a contrib plugin that exposes social post data linked to content entities
 - [Statistics](https://www.drupal.org/project/statistics) - Core module for page view tracking. Content Intelligence ships a built-in plugin that collects view counts for nodes
-- [Content Translation](https://www.drupal.org/project/content_translation) - Core module for multilingual content. Content Intelligence ships a built-in plugin that reports translation coverage and missing languages
+- [Content Translation](https://www.drupal.org/docs/8/core/modules/content-translation) - Core module for multilingual content. Content Intelligence ships a built-in plugin that reports translation coverage and missing languages
 - [Drush Webmaster](https://www.drupal.org/project/drush_webmaster) - AI-assisted Drupal site management via Drush. Can consume Content Intelligence's JSON output to make data-driven content decisions
